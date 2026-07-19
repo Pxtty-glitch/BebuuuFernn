@@ -570,15 +570,15 @@
   }
 
   async function loadState(){
-    try{
-      const res = await window.storage.get(STORAGE_KEY, false);
-      if(res && res.value){ state = JSON.parse(res.value); }
-    }catch(e){ /* first visit, no saved state */ }
-  }
-  async function saveState(){
-    try{ await window.storage.set(STORAGE_KEY, JSON.stringify(state), false); }
-    catch(e){ console.error('Could not save progress', e); }
-  }
+  try{
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if(raw){ state = JSON.parse(raw); }
+  }catch(e){ /* first visit, or storage blocked */ }
+}
+async function saveState(){
+  try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
+  catch(e){ console.error('Could not save progress', e); }
+}
 
   function seededIndex(dateStr, len){
     let h = 0;
